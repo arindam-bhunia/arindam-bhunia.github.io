@@ -15,6 +15,10 @@
       max-width: 600px;
       margin: 0 auto;
       padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      height: 100vh;
     }
 
     h1 {
@@ -72,7 +76,7 @@
 <body>
   <div class="container">
     <h1>Donate Now</h1>
-    <p>Select your preferred currency:</p>
+    <p>Select your preferred currency</p>
     <div class="donation-buttons">
       <button onclick="redirectToUSD()" data-currency="USD"><span>USD</span></button>
       <button onclick="redirectToEUR()" data-currency="EUR"><span>EUR</span></button>
