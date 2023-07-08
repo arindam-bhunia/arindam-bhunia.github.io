@@ -45,6 +45,8 @@
     .donation-buttons button::before {
       display: inline-block;
       margin-right: 5px;
+      font-size: 20px;
+      vertical-align: middle;
     }
 
     .donation-buttons button[data-currency="USD"]::before {
@@ -58,6 +60,12 @@
     .donation-buttons button[data-currency="INR"]::before {
       content: "₹";
     }
+
+    .donation-buttons button span {
+      display: block;
+      font-size: 14px;
+      line-height: 1;
+    }
   </style>
 </head>
 
@@ -66,9 +74,9 @@
     <h1>Donate Now</h1>
     <p>Select your preferred currency:</p>
     <div class="donation-buttons">
-      <button onclick="redirectToUSD()" data-currency="USD">USD</button>
-      <button onclick="redirectToEUR()" data-currency="EUR">EUR</button>
-      <button onclick="redirectToINR()" data-currency="INR">INR</button>
+      <button onclick="redirectToUSD()" data-currency="USD"><span>USD</span></button>
+      <button onclick="redirectToEUR()" data-currency="EUR"><span>EUR</span></button>
+      <button onclick="redirectToINR()" data-currency="INR"><span>INR</span></button>
     </div>
   </div>
 
