@@ -41,6 +41,23 @@
     .donation-buttons button:hover {
       background-color: #45a049;
     }
+
+    .donation-buttons button::before {
+      display: inline-block;
+      margin-right: 5px;
+    }
+
+    .donation-buttons button[data-currency="USD"]::before {
+      content: "$";
+    }
+
+    .donation-buttons button[data-currency="EUR"]::before {
+      content: "€";
+    }
+
+    .donation-buttons button[data-currency="INR"]::before {
+      content: "₹";
+    }
   </style>
 </head>
 
@@ -49,9 +66,9 @@
     <h1>Donate Now</h1>
     <p>Select your preferred currency:</p>
     <div class="donation-buttons">
-      <button onclick="redirectToUSD()">USD</button>
-      <button onclick="redirectToEUR()">EUR</button>
-      <button onclick="redirectToINR()">INR</button>
+      <button onclick="redirectToUSD()" data-currency="USD">USD</button>
+      <button onclick="redirectToEUR()" data-currency="EUR">EUR</button>
+      <button onclick="redirectToINR()" data-currency="INR">INR</button>
     </div>
   </div>
 
