@@ -21,25 +21,13 @@
       text-align: center;
     }
 
-    .donation-form {
-      background-color: #ffffff;
-      border-radius: 5px;
-      padding: 20px;
+    .donation-buttons {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
     }
 
-    .donation-form label {
-      display: block;
-      margin-bottom: 10px;
-    }
-
-    .donation-form input[type="number"] {
-      width: 100%;
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 3px;
-    }
-
-    .donation-form button {
+    .donation-buttons button {
       background-color: #4CAF50;
       color: #ffffff;
       border: none;
@@ -47,10 +35,10 @@
       font-size: 16px;
       border-radius: 3px;
       cursor: pointer;
-      margin-top: 10px;
+      margin-right: 10px;
     }
 
-    .donation-form button:hover {
+    .donation-buttons button:hover {
       background-color: #45a049;
     }
   </style>
@@ -59,20 +47,27 @@
 <body>
   <div class="container">
     <h1>Donate Now</h1>
-    <div class="donation-form">
-      <form>
-        <label for="amount">Donation Amount:</label>
-        <input type="number" id="amount" name="amount" placeholder="Enter amount">
-
-        <label for="currency">Currency:</label>
-        <div>
-          <button type="submit" name="currency" value="USD">USD</button>
-          <button type="submit" name="currency" value="EUR">EUR</button>
-          <button type="submit" name="currency" value="INR">INR</button>
-        </div>
-      </form>
+    <p>Select your preferred currency:</p>
+    <div class="donation-buttons">
+      <button onclick="redirectToUSD()">USD</button>
+      <button onclick="redirectToEUR()">EUR</button>
+      <button onclick="redirectToINR()">INR</button>
     </div>
   </div>
+
+  <script>
+    function redirectToUSD() {
+      window.location.href = "https://www.example-donation-site-usd.com";
+    }
+
+    function redirectToEUR() {
+      window.location.href = "https://www.example-donation-site-eur.com";
+    }
+
+    function redirectToINR() {
+      window.location.href = "https://www.example-donation-site-inr.com";
+    }
+  </script>
 </body>
 
 </html>
