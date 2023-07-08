@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Donate Now</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    .donation-form {
+      background-color: #ffffff;
+      border-radius: 5px;
+      padding: 20px;
+    }
+
+    .donation-form label {
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    .donation-form input[type="number"] {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+    }
+
+    .donation-form select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+    }
+
+    .donation-form button {
+      background-color: #4CAF50;
+      color: #ffffff;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+
+    .donation-form button:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>Donate Now</h1>
+    <div class="donation-form">
+      <form>
+        <label for="amount">Donation Amount:</label>
+        <input type="number" id="amount" name="amount" placeholder="Enter amount">
+
+        <label for="currency">Currency:</label>
+        <select id="currency" name="currency">
+          <option value="USD">USD</option>
+          <option value="EUR">EUR</option>
+          <option value="INR">INR</option>
+        </select>
+
+        <button type="submit">Donate</button>
+      </form>
+    </div>
+  </div>
+</body>
+
+</html>
