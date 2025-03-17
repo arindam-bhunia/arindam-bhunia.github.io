@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Excel Data Viewer & Query Generator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #1e1e1e, #121212);
+            text-align: center;
+            padding: 20px;
+            color: white;
+        }
+        h2, h3 {
+            color: #f8f9fa;
+        }
+        input[type="file"], button {
+            padding: 12px;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            background: linear-gradient(135deg, #007BFF, #0056b3);
+            color: white;
+            cursor: pointer;
+            transition: 0.3s;
+            outline: none;
+            margin: 5px;
+        }
+        input[type="file"]:hover, button:hover {
+            background: linear-gradient(135deg, #0056b3, #003c80);
+        }
+        input {
+            width: 60%;
+            background-color: #333;
+            color: white;
+            border: 1px solid #555;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        #query-box {
+            border: 2px solid #007BFF;
+            padding: 15px;
+            width: 80%;
+            min-height: 50px;
+            background-color: #222;
+            font-family: monospace;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            margin: 20px auto;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.4);
+            border-radius: 5px;
+            color: #f8f9fa;
+            text-align: left;
+        }
+        table {
+            width: 80%;
+            border-collapse: collapse;
+            margin: 20px auto;
+            background-color: #222;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.4);
+            border-radius: 5px;
+            color: #f8f9fa;
+        }
+        th, td {
+            border: 1px solid #444;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #007BFF;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <h2>Upload an Excel File</h2>
+    <input type="file" id="upload" accept=".xlsx, .xls">
+    
+    <h3>Extracted Query:</h3>
+    <div id="query-box"><p id="query"></p></div>
+    <button id="copyButton">Copy Query</button>
+    
+    <button onclick="search('https://www.google.com/search?q=')">Search on Google</button>
+    <button onclick="search('https://www.bing.com/search?q=')">Search on Bing</button>
+    <button onclick="search('https://duckduckgo.com/?q=')">Search on DuckDuckGo</button>
+    <button onclick="search('https://yandex.com/search/?text=')">Search on Yandex</button>
+    <button onclick="search('https://search.yahoo.com/search?p=')">Search on Yahoo! Search</button>
+    <button onclick="search('https://search.brave.com/search?q=')">Search on Brave Search</button>
+    <button onclick="search('https://www.baidu.com/s?wd=')">Search on Baidu</button>
+    <button onclick="search('https://www.ecosia.org/search?q=')">Search on Ecosia</button>
+    <button onclick="search('https://www.startpage.com/do/dsearch?query=')">Search on Startpage</button>
+    <button onclick="search('https://swisscows.com/en/web?query=')">Search on Swisscows</button>
+    
+    <h3>First Sheet Data:</h3>
+    <table id="data-table"></table>
+    
+    <script>
+        function displayTable(data) {
+            let table = document.getElementById("data-table");
+            table.innerHTML = "";
+            data.forEach((row, rowIndex) => {
+                let tr = document.createElement("tr");
+                row.forEach(cell => {
+                    let td = document.createElement(rowIndex === 0 ? "th" : "td");
+                    td.textContent = cell;
+                    tr.appendChild(td);
+                });
+                table.appendChild(tr);
+            });
+        }
+        
+        function displayQuery(data) {
+            let queryBox = document.getElementById("query");
+            queryBox.textContent = data.map(row => row.join(" ")).join(" ");
+        }
+        
+        document.getElementById('upload').addEventListener('change', function(event) {
+            let file = event.target.files[0];
+            if (!file) {
+                alert("No file selected.");
+                return;
+            }
+            let reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    let data = new Uint8Array(e.target.result);
+                    let workbook = XLSX.read(data, { type: 'array' });
+                    let firstSheet = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], { header: 1 });
+                    let lastSheet = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[workbook.SheetNames.length - 1]], { header: 1 });
+                    displayTable(firstSheet);
+                    displayQuery(lastSheet);
+                } catch (error) {
+                    alert("Error processing file: " + error.message);
+                }
+            };
+            reader.readAsArrayBuffer(file);
+        });
+        
+        function search(baseUrl) {
+            let query = document.getElementById("query").textContent.trim();
+            if (query) {
+                window.open(baseUrl + encodeURIComponent(query), "_blank");
+            } else {
+                alert("No query available to search.");
+            }
+        }
+        
+        document.getElementById("copyButton").addEventListener("click", function() {
+            let queryText = document.getElementById("query").textContent;
+            navigator.clipboard.writeText(queryText).then(() => {
+                alert("Query copied to clipboard!");
+            }).catch(err => {
+                alert("Failed to copy query: " + err);
+            });
+        });
+    </script>
+</body>
+</html>
