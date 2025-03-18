@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editable Table</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        table {
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 5px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        input {
+            border: none;
+            background: transparent;
+            width: 100%;
+        }
+        button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+    <script>
+        function handleFileUpload(event) {
+            let file = event.target.files[0];
+            if (!file) return;
+            
+            let reader = new FileReader();
+            reader.onload = function(e) {
+                let data;
+                if (file.name.endsWith(".csv")) {
+                    data = e.target.result.split("\n").map(row => row.split(","));
+                } else {
+                    let workbook = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
+                    let firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+                    data = XLSX.utils.sheet_to_json(firstSheet, { header: 1, defval: "" });
+                }
+                
+                // Remove completely blank rows
+                data = data.filter(row => row.some(cell => cell.trim() !== ""));
+                
+                // Remove completely blank columns
+                let colCount = Math.max(...data.map(row => row.length));
+                let nonEmptyCols = new Array(colCount).fill(false);
+                data.forEach(row => {
+                    row.forEach((cell, colIndex) => {
+                        if (cell.trim() !== "") nonEmptyCols[colIndex] = true;
+                    });
+                });
+                data = data.map(row => row.filter((_, colIndex) => nonEmptyCols[colIndex]));
+                
+                let thead = document.querySelector("thead tr");
+                let tbody = document.querySelector("tbody");
+                thead.innerHTML = "";
+                tbody.innerHTML = "";
+                
+                // Add headers
+                if (data.length > 0) {
+                    data[0].forEach(header => {
+                        let th = document.createElement("th");
+                        let input = document.createElement("input");
+                        input.type = "text";
+                        input.value = header;
+                        th.appendChild(input);
+                        thead.appendChild(th);
+                    });
+                }
+                
+                // Add data rows
+                data.slice(1).forEach(rowData => {
+                    let row = document.createElement("tr");
+                    rowData.forEach(cellData => {
+                        let td = document.createElement("td");
+                        let input = document.createElement("input");
+                        input.type = "text";
+                        input.value = cellData;
+                        td.appendChild(input);
+                        row.appendChild(td);
+                    });
+                    tbody.appendChild(row);
+                });
+            };
+            
+            if (file.name.endsWith(".csv")) {
+                reader.readAsText(file);
+            } else {
+                reader.readAsArrayBuffer(file);
+            }
+        }
+        
+        function addRow() {
+            let table = document.querySelector("tbody");
+            let newRow = document.createElement("tr");
+            let cols = document.querySelector("thead tr").children.length;
+            for (let i = 0; i < cols; i++) {
+                let td = document.createElement("td");
+                let input = document.createElement("input");
+                input.type = "text";
+                td.appendChild(input);
+                newRow.appendChild(td);
+            }
+            table.appendChild(newRow);
+        }
+        
+        function addColumn() {
+            let headerRow = document.querySelector("thead tr");
+            let newHeader = document.createElement("th");
+            let headerInput = document.createElement("input");
+            headerInput.type = "text";
+            newHeader.appendChild(headerInput);
+            headerRow.appendChild(newHeader);
+            
+            let rows = document.querySelectorAll("tbody tr");
+            rows.forEach(row => {
+                let newCell = document.createElement("td");
+                let input = document.createElement("input");
+                input.type = "text";
+                newCell.appendChild(input);
+                row.appendChild(newCell);
+            });
+        }
+
+        function deleteRow() {
+            let table = document.querySelector("tbody");
+            if (table.rows.length > 0) {
+                table.deleteRow(-1);
+            }
+        }
+
+        function deleteColumn() {
+            let headerRow = document.querySelector("thead tr");
+            if (headerRow.cells.length > 0) {
+                headerRow.deleteCell(-1);
+            }
+            let rows = document.querySelectorAll("tbody tr");
+            rows.forEach(row => {
+                if (row.cells.length > 0) {
+                    row.deleteCell(-1);
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+    <input type="file" accept=".xls,.xlsx,.csv" onchange="handleFileUpload(event)" style="margin-bottom: 20px; display: block;">
+    <table>
+        <thead>
+            <tr></tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <button onclick="addRow()">Add Row</button>
+    <button onclick="addColumn()">Add Column</button>
+    <button onclick="deleteRow()">Delete Row</button>
+    <button onclick="deleteColumn()">Delete Column</button>
+</body>
+</html>
